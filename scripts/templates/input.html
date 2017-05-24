@@ -1,0 +1,10 @@
+<div class="mathInput" ng-controller="mainCtrl">
+    <h3>Please enter a math equation in the input a basic algebra equation below.  The equation can only feature the following functions: + - * and or /.</h3>
+    
+    <input type="text" ng-model="mathInput" placeholder="Enter an Equation Here" ng-keyup="evaluate()">
+    
+    <!--Show the Results Here-->
+    <div class="results">
+        {{results}}
+    </div>
+</div>
