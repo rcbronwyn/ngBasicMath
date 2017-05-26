@@ -1,5 +1,5 @@
 {
-  "name": "ngmath",
+  "name": "ngbasicmath",
   "version": "1.0.0",
   "description": "basic math parser",
   "main": "/test/index.js",

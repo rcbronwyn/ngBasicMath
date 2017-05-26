@@ -51,5 +51,13 @@ describe('mathInput', function(){
         result = evaluateExpression('1+2 *3');
         assert.equal(result,7);
     });           
+    it ('should return 7 when passed 2 * 3 + 1', function(){
+        var result = evaluateExpression('2 * 3 + 1');
+        assert.equal(result,7);    
+    });         
+    it ('should return 21 when passed 5 + 6 / 2 * 5 + 1', function(){
+        var result = evaluateExpression('5 + 6 / 2 * 5 + 1');
+        assert.equal(result,21);    
+    });             
         
 })

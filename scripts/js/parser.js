@@ -37,10 +37,16 @@ var acceptedOperators = [
 
 /*evaluateExpression is the main function being called from the directive controller*/
 function evaluateExpression(expression){
+    var results;
     /*rpnExpression should return an array of tokens converted to reverse polish notation*/
     var rpnExpression = convertToRPN(expression);
     /*results should return the answer to the equation*/
-    var results = postFixEvaluation(rpnExpression);
+    if( typeof rpnExpression == "string"){
+        results = rpnExpression;
+    } else {
+        results = postFixEvaluation(rpnExpression);
+    }
+    
     
     return results;
 }
@@ -72,11 +78,22 @@ function convertToRPN(expression){
         /*3 - If the current token is an operator, then:*/
             
             var currentPriority = getOperatorProperty([currentToken], "priority");
+                /*If an error message is returned, stop here and return the message*/
+                if(typeof currentPriority == "string" ){
+                    return currentPriority;
+                }
+                 
+ 
+
+                
             var stackIndex = stack.length;
             /*3a While there is a 2nd Operator token.*/
-            while (stackIndex.length > 0){
+            if (stackIndex > 0){
+                //Reduce the index count by 1
+                stackIndex--
                 var currentOperator = stack[stackIndex];
                 var operatorPriority = getOperatorProperty([currentOperator], "priority");
+                
                 /*3a_1 and the 1st Operator is less than or equal to that of the 2nd */
                 if (operatorPriority >= currentPriority){
                     var token = stack.splice(stackIndex, 1);
@@ -112,9 +129,10 @@ return expression.split('');
 };
 
 /*Function for looping through the acceptedOperators objects to grab the correct property*/
-function getOperatorProperty(token, property, numA = null, numB = null){
-
+function getOperatorProperty(token, property, numA, numB){
+    
     for (var i = 0; i < acceptedOperators.length; i++){
+        
         /*If the token provided is in the acceptableOperators as a symbol */
         if (token == acceptedOperators[i].symbol){
           /*If the numA and numB are provided (only if you're trying to call the equation function)*/
@@ -124,26 +142,28 @@ function getOperatorProperty(token, property, numA = null, numB = null){
               /*Otherwise*/
                return acceptedOperators[i][property];
           }
-
-        } else {
-            /*Otherwise it's not an acceptable token, and we'll generate an error*/
-            errorMessage("operator", token);
-        }
+        } 
     }
+    return errorMessage("operator", token);
+            
+   
 }
 
 /*Helper Function for generating error messages*/
 function errorMessage(error, item){
     var message="";
 
-    if (error = "operator"){
+    if (error == "operator"){
       message =  "Sorry, the " + item + " is not a valid character, please remove it from the input.";
+
     }
-    if (error = "results"){
+    if (error == "results"){
       message =  "Sorry, the equation above is incomplete or does not return a number.";
+      
     }
 
-    return message;
+     return message; 
+
 }
 
 
@@ -170,6 +190,7 @@ function postFixEvaluation(rpnArray){
             var numB = results.pop();
             /* 4 Pop the top two values from the stack, and evaluate.  In ourcase, we call the equation function from the acceptableTokens array. */
             results.push(  getOperatorProperty(rpnArray[i], "equation", numA, numB) );
+
                 
         }
 
